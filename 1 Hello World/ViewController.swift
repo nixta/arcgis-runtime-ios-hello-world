@@ -9,7 +9,7 @@
 import UIKit
 import ArcGIS
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, AGSWebMapDelegate {
 
     @IBOutlet weak var mapView: AGSMapView!
     
@@ -20,6 +20,24 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
 
         self.webMap.openIntoMapView(self.mapView)
+        
+        self.webMap.delegate = self
+    }
+    
+    func webMapDidLoad(webMap: AGSWebMap!) {
+        println("Web Map Loaded")
+    }
+    
+    func didOpenWebMap(webMap: AGSWebMap!, intoMapView mapView: AGSMapView!) {
+        println("Opened the Web Map into the Map View")
+    }
+    
+    func webMap(webMap: AGSWebMap!, didLoadLayer layer: AGSLayer!) {
+        println("Loaded layer \(layer.name)")
+    }
+    
+    func webMap(webMap: AGSWebMap!, didFailToLoadWithError error: NSError!) {
+        println("Layer failed to load into Web Map! \(error.localizedDescription)")
     }
     
     override func didReceiveMemoryWarning() {
