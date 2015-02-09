@@ -30,6 +30,11 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, AGSLayerDelegat
         let layerURL = "http://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Transportation_WebMercator/MapServer/11"
         let fLayer = AGSFeatureLayer(URL: NSURL(string: layerURL), mode: AGSFeatureLayerMode.OnDemand)
         
+        let symbol = AGSSimpleMarkerSymbol(color: UIColor.orangeColor().colorWithAlphaComponent(0.75))
+        symbol.style = AGSSimpleMarkerSymbolStyle.Circle
+        symbol.outline = nil
+        fLayer.renderer = AGSSimpleRenderer(symbol: symbol)
+        
         self.mapView.addMapLayer(fLayer, withName: "CCTV Cameras")
     }
     
