@@ -9,56 +9,17 @@
 import UIKit
 import ArcGIS
 
-class ViewController: UIViewController, AGSMapViewLayerDelegate, AGSLayerDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet weak var mapView: AGSMapView!
     
-    let cctvCalloutDelegate = AGSCalloutTemplate()
+    let webMap = AGSWebMap(itemId: "e371d8a5dcbd4fc68555c79cf087fb1e", credential: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-        // Add a basemap layer
-        let basemapUrl = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"
-        let basemap = AGSTiledMapServiceLayer(URL: NSURL(string: basemapUrl))
-        
-        self.mapView.addMapLayer(basemap, withName: "Basemap")
-        
-        let centerPoint = AGSPoint(x: -77.0455, y:38.9067, spatialReference: AGSSpatialReference.wgs84SpatialReference())
-        self.mapView.zoomToScale(61315, withCenterPoint: centerPoint, animated: true)
-        
-        // Add a feature layer
-        let layerURL = "http://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Transportation_WebMercator/MapServer/11"
-        let fLayer = AGSFeatureLayer(URL: NSURL(string: layerURL), mode: AGSFeatureLayerMode.OnDemand)
-        
-        let symbol = AGSSimpleMarkerSymbol(color: UIColor.orangeColor().colorWithAlphaComponent(0.75))
-        symbol.style = AGSSimpleMarkerSymbolStyle.Circle
-        symbol.outline = nil
-        fLayer.renderer = AGSSimpleRenderer(symbol: symbol)
-        
-        fLayer.outFields = ["NAME", "ADDRESS"]
-        self.cctvCalloutDelegate.titleTemplate = "${NAME}"
-        self.cctvCalloutDelegate.detailTemplate = "${ADDRESS}"
-        fLayer.calloutDelegate = self.cctvCalloutDelegate
-        
-        self.mapView.addMapLayer(fLayer, withName: "CCTV Cameras")
-        
-        self.mapView.layerDelegate = self
-        basemap.delegate = self
-        fLayer.delegate = self
-    }
-    
-    func layerDidLoad(layer: AGSLayer!) {
-        println("Layer \(layer.name) loaded")
-    }
-    
-    func layer(layer: AGSLayer!, didFailToLoadWithError error: NSError!) {
-        println("Layer \(layer.name) failed to load! \(error.localizedDescription)")
-    }
-    
-    func mapViewDidLoad(mapView: AGSMapView!) {
-        println("Map View Loaded! WKID = \(mapView.spatialReference.wkid)")
+        self.webMap.openIntoMapView(self.mapView)
     }
     
     override func didReceiveMemoryWarning() {
