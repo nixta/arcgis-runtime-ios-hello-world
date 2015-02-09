@@ -13,6 +13,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, AGSLayerDelegat
 
     @IBOutlet weak var mapView: AGSMapView!
     
+    let cctvCalloutDelegate = AGSCalloutTemplate()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -34,6 +36,11 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, AGSLayerDelegat
         symbol.style = AGSSimpleMarkerSymbolStyle.Circle
         symbol.outline = nil
         fLayer.renderer = AGSSimpleRenderer(symbol: symbol)
+        
+        fLayer.outFields = ["NAME", "ADDRESS"]
+        self.cctvCalloutDelegate.titleTemplate = "${NAME}"
+        self.cctvCalloutDelegate.detailTemplate = "${ADDRESS}"
+        fLayer.calloutDelegate = self.cctvCalloutDelegate
         
         self.mapView.addMapLayer(fLayer, withName: "CCTV Cameras")
     }
