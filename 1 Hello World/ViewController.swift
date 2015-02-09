@@ -43,6 +43,22 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, AGSLayerDelegat
         fLayer.calloutDelegate = self.cctvCalloutDelegate
         
         self.mapView.addMapLayer(fLayer, withName: "CCTV Cameras")
+        
+        self.mapView.layerDelegate = self
+        basemap.delegate = self
+        fLayer.delegate = self
+    }
+    
+    func layerDidLoad(layer: AGSLayer!) {
+        println("Layer \(layer.name) loaded")
+    }
+    
+    func layer(layer: AGSLayer!, didFailToLoadWithError error: NSError!) {
+        println("Layer \(layer.name) failed to load! \(error.localizedDescription)")
+    }
+    
+    func mapViewDidLoad(mapView: AGSMapView!) {
+        println("Map View Loaded! WKID = \(mapView.spatialReference.wkid)")
     }
     
     override func didReceiveMemoryWarning() {
